@@ -1,22 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react'
+
+import {useSelector, useDispatch} from 'react-redux'
+import {_fetchAllPeople} from './redux/actions/PeopleAction'
 
 function App() {
+
+  const data = useSelector(state => state.people)
+
+  const dispatch = useDispatch()
+
+
+  const listPeople = (data) => {
+    return <ul>
+      {data.map(el => <li key={Math.random()}>{el.name + ' - ' + el.age}</li>)}
+    </ul>
+  }
+  
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {!data.loading && <p>{data.data.length > 0 ? listPeople(data.data) : 'Empty'}</p>}<br/>
+        {data.loading ? 'Loading...' : ''}
+        <button onClick={() => dispatch(_fetchAllPeople())}>Fetch People</button>
       </header>
     </div>
   );
